@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоМаркет — Вход в систему</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ СВЕРХУ ПО ГОРИЗОНТАЛИ -->
+    <header class="main-header" style="background: none; border: none; box-shadow: none; position: relative; z-index: 100;">
+        <div class="header-top">
+            
+            <!-- ЛОГОТИП АВТОМАРКЕТ -->
+            <a href="index.html" class="logo" style="font-size: 22px; white-space: nowrap; margin-right: 25px; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 2px 4px rgba(234, 88, 12, 0.2));">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    <path d="M12 6v6l4 2"/>
+                    <circle cx="12" cy="12" r="1" fill="#ea580c"/>
+                </svg>
+                <span style="font-weight: 800; letter-spacing: -0.5px; color: #000000; text-decoration: none !important;">Авто<span style="color: #ea580c;">Маркет</span></span>
+            </a>
+
+            <!-- ВЫБОР ГОРОДА -->
+            <div class="city-select">
+                <span>Город: </span>
+                <select id="header-city-select">
+                    <option value="Москва" selected>Москва</option>
+                    <option value="Пенза">Пенза</option>
+                    <option value="Санкт-Петербург">Санкт-Петербург</option>
+                </select>
+            </div>
+
+            <!-- ГЛАВНОЕ МЕНЮ НАВИГАЦИИ -->
+            <nav class="main-nav" style="margin-right: auto;">
+                <a href="index.html" class="nav-link">Главная</a>
+                
+                <div class="dropdown">
+                    <div class="nav-label" style="cursor: pointer; padding: 10px 15px;">Каталоги ▾</div>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="alert('Для просмотра каталогов необходимо авторизоваться!')">Оригинальный каталог</a>
+                        <a href="#" onclick="alert('Для просмотра каталогов необходимо авторизоваться!')">Китайский каталог</a>
+                        <a href="#" onclick="alert('Для просмотра каталогов необходимо авторизоваться!')">Каталог заменителей</a>
+                        <a href="#" onclick="alert('Для просмотра каталогов необходимо авторизоваться!')">Каталог шин и дисков</a>
+                        <a href="#" onclick="alert('Для просмотра каталогов необходимо авторизоваться!')">Автолампы</a>
+                        <a href="#" onclick="alert('Для просмотра каталогов необходимо авторизоваться!')">Гараж</a>
+                    </div>
+                </div>
+
+                <a href="#" class="nav-link" onclick="alert('Корзина доступна только авторизованным пользователям!')">Корзина</a>
+                
+                <div class="dropdown">
+                    <div class="nav-label" style="cursor: pointer; padding: 10px 15px;">Заказы ▾</div>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">Заказы</a>
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">Оформление возвратов</a>
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">Оформление рекламаций</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <div class="nav-label" style="cursor: pointer; padding: 10px 15px;">Взаиморасчеты ▾</div>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">Финансы</a>
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">График расчетов</a>
+                    </div>
+                </div>
+
+                <div class="dropdown" style="z-index: 101;">
+                    <a href="#" onclick="alert('Раздел доступен только после входа!')" class="nav-label" style="cursor: pointer; padding: 10px 15px; color: #ea580c; font-weight: bold; text-decoration: none; display: inline-block;">Программы ▾</a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">Программа лояльности</a>
+                        <a href="#" onclick="alert('Раздел доступен только после входа!')">Актуальные акции</a>
+                    </div>
+                </div>
+
+                <a href="#" class="nav-link" onclick="alert('Раздел доступен только после входа!')">Оплата по QR</a>
+            </nav>
+
+            <div class="user-menu"></div>
+        </div>
+    </header>
+
+    <!-- БЛОК АВТОРИЗАЦИИ СТРОГО ПО ЦЕНТРУ ЭКРАНА -->
+    <div class="login-wrapper" style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 260px); padding: 20px;">
+        <div class="login-card" style="max-width: 400px; width: 100%;">
+            <h2>Вход в АвтоМаркет</h2>
+            
+            <form id="loginForm">
+                <div class="form-group-login">
+                    <label for="username">Логин (E-mail или телефон)</label>
+                    <input type="text" id="username" class="login-control" placeholder="example@mail.ru" required>
+                </div>
+                
+                <!-- ПОЛЕ ПАРОЛЯ С КНОПКОЙ-ГЛАЗКОМ -->
+                <div class="form-group-login" style="margin-top: 15px;">
+                    <label for="password">Пароль</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="password" class="login-control" placeholder="••••••••" style="width: 100%; padding-right: 45px;" required>
+                        
+                        <!-- Переключатель видимости (SVG-глазок) -->
+                        <span id="togglePassword" style="position: absolute; right: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; user-select: none; width: 24px; height: 24px;">
+                            <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary-custom" style="width: 100%; border: none; margin-top: 25px; padding: 12px; cursor: pointer; background: #ea580c; color: white; font-weight: bold; border-radius: 6px;">
+                    Войти в личный кабинет
+                </button>
+            </form>
+            
+            <div style="margin-top: 20px; border-top: 1px solid rgba(253, 186, 116, 0.3); padding-top: 20px; text-align: center;">
+                <p style="font-size: 14px; margin-bottom: 10px; color: #000000; font-weight: 500;">Впервые на платформе?</p>
+                <a href="register.html" class="btn-secondary-custom" style="display: block; text-align: center; font-size: 14px; padding: 10px; text-decoration: none; background: #f1f5f9; color: #0f172a; border-radius: 6px; font-weight: 600;">
+                    Зарегистрироваться
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 20px; color: #64748b; font-size: 14px; border-top: 1px solid #e2e8f0; margin-top: 40px;">
+        <p>&copy; 2026 АвтоМаркет. Все права защищены. Платформа автоматизации снабжения B2B и B2C.</p>
+    </footer>
+
+    <!-- КРАСИВОЕ МОДАЛЬНОЕ ОКНО ОШИБКИ ВВОДА (ДОБАВЛЕНО) -->
+    <div id="errorModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-icon">⚠️</div>
+            <h3>Ошибка авторизации</h3>
+            <p>Неверный логин или пароль. Пожалуйста, проверьте правильность ввода данных.</p>
+            <button class="modal-btn" onclick="closeErrorModal()">Попробовать еще раз</button>
+        </div>
+    </div>
+
+    <!-- ПОДКЛЮЧАЕМ ВНЕШНИЙ СКРИПТ ЛОГИКИ -->
+    <script src="login.js"></script>
+</body>
+</html>

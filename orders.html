@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>АвтоМаркет — Мои Заказы</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ СВЕРХУ ПО ГОРИЗОНТАЛИ -->
+    <header class="main-header" style="background: none; border: none; box-shadow: none; position: relative; z-index: 100;">
+        <div class="header-top">
+            
+            <!-- ЛОГОТИП АВТОМАРКЕТ -->
+            <a href="glavnaya.html" class="logo" style="font-size: 22px; white-space: nowrap; margin-right: 25px; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                    <path d="M12 6v6l4 2"/>
+                    <circle cx="12" cy="12" r="1" fill="#ea580c"/>
+                </svg>
+                <span style="font-weight: 800; letter-spacing: -0.5px; color: #000000;">Авто<span style="color: #ea580c;">Маркет</span></span>
+            </a>
+
+            <!-- ВЫБОР ГОРОДА -->
+            <div class="city-select">
+                <span>Город: </span>
+                <select id="header-city-select">
+                    <option value="Москва">Москва</option>
+                    <option value="Пенза">Пенза</option>
+                    <option value="Санкт-Петербург">Санкт-Петербург</option>
+                </select>
+            </div>
+
+            <!-- ГЛАВНОЕ МЕНЮ НАВИГАЦИИ (УНИВЕРСАЛЬНОЕ СКВОЗНОЕ С ПРОФИЛЕМ) -->
+            <nav class="main-nav" style="margin-right: auto;">
+                <a href="glavnaya.html" class="nav-link">Главная</a>
+                
+                <div class="dropdown">
+                    <div class="nav-label" style="cursor: pointer; padding: 10px 15px;">Каталоги ▾</div>
+                    <div class="dropdown-content">
+                        <a href="catalog.html">Оригинальный каталог</a>
+                        <a href="china_catalog.html">Китайский каталог</a>
+                        <a href="replacements_catalog.html">Каталог заменителей</a>
+                        <a href="tyres_catalog.html">Каталог шин и дисков</a>
+                        <a href="lamps_catalog.html">Автолампы</a>
+                        <a href="garage.html">Гараж</a>
+                    </div>
+                </div>
+
+                <!-- КОРЗИНА: Сохранен оранжевый кругляшок-счётчик количества товаров -->
+                <a href="cart.html" class="nav-link" id="nav-cart-link">Корзина <span id="cart-counter" style="background: #ea580c; color: white; padding: 2px 7px; border-radius: 20px; font-size: 12px; margin-left: 3px; display: none;">0</span></a>
+                <div class="dropdown">
+                    <div class="nav-label" style="cursor: pointer; padding: 10px 15px;">Заказы ▾</div>
+                    <div class="dropdown-content">
+                        <a href="orders.html?action=view">Заказы</a>
+                        <a href="returns.html">Оформление возвратов</a>
+                        <a href="claims.html">Оформление рекламаций</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <div class="nav-label" style="cursor: pointer; padding: 10px 15px;">Взаиморасчеты ▾</div>
+                    <div class="dropdown-content">
+                        <a href="sales.html">Продажи (Архив сделок)</a>
+                        <a href="finance.html">Финансы</a>
+                        <a href="schedule.html">График расчетов</a>
+                    </div>
+                </div>
+
+                <!-- ИСПРАВЛЕНО И ДОБАВЛЕНО: Сквозная ссылка на Личный профиль (Карточку клиента) -->
+                <a href="profile.html" class="nav-link">Личные данные</a>
+
+                <a href="qrcode.html" class="nav-link">Оплата по QR</a>
+            </nav>
+
+            <!-- ДИНАМИЧЕСКИЙ БЛОК ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ -->
+            <div class="user-menu" style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; line-height: 1.3; padding: 4px 0; font-size: 14px; white-space: nowrap;">
+                <!-- ИСПРАВЛЕНО: Теперь это ссылка на профиль во всех файлах -->
+                <a href="profile.html" id="nav-user-greeting" style="font-weight: 600; color: #0c56ea; text-decoration: none; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ea580c'" onmouseout="this.style.color='#0c56ea'">Загрузка...</a>
+                <div style="font-weight: 600; color: #000000;">
+                    Баланс: <span style="color: #16a34a;" id="nav-user-balance">0 ₽</span>
+                </div>
+                <a href="#" onclick="handleLogout(event)" style="color: #ef4444; text-decoration: none; font-size: 13px; font-weight: bold; margin-top: 2px;">Выход</a>
+            </div>
+        </div>
+    </header>
+    <div class="container" style="width: 92%; max-width: 1400px; margin-left: auto; margin-right: auto; margin-top: 30px;">
+        
+        <!-- ЭКРАН 1: СПИСОК ЗАКАЗОВ -->
+        <div id="orders-list-screen" style="background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <h2 style="margin-bottom: 20px;">История ваших заказов</h2>
+            <div class="table-responsive">
+                <table class="schedule-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e8f0; background: #f8fafc;">
+                            <th style="padding: 12px;">Номер заказа</th>
+                            <th style="padding: 12px;">Дата создания</th>
+                            <th style="padding: 12px;">Дата поступления</th>
+                            <th style="padding: 12px; text-align: right;">Сумма заказа</th>
+                            <th style="padding: 12px; text-align: center;">Статус снабжения</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list-body">
+                        <!-- Динамическая история заказов -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- ЭКРАН 2: ПОДРОБНАЯ РЕДАКТИРУЕМАЯ ИНФОРМАЦИЯ -->
+        <div id="order-details-screen" style="display: none; background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <button class="search-btn" onclick="closeOrderDetails()" style="background-color: #64748b; cursor: pointer; padding: 10px 20px;">
+                    ← Назад к списку заказов
+                </button>
+                <button id="cancel-entire-order-btn" class="search-btn" style="background-color: #ef4444; cursor: pointer; padding: 10px 20px;">
+                    🚫 Отменить заказ целиком
+                </button>
+            </div>
+
+            <div style="border: 1px solid #cbd5e1; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="font-size: 22px; color: #0f172a; margin: 0;" id="detail-order-number">Заказ № AM-789423</h2>
+                        <span style="font-size: 14px; color: #64748b; display: inline-block; margin-top: 4px;" id="detail-order-date">от 30 сентября 2026</span>
+                    </div>
+                    <span id="detail-order-badge" style="padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;">В обработке</span>
+                </div>
+
+                <!-- ТАЙМЛАЙН СТАТУСОВ -->
+                <div id="timeline-container" style="display: flex; justify-content: space-between; margin-bottom: 35px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <div style="text-align: center; flex: 1;">
+                        <div id="step-created-label" style="font-weight: 700; color: #16a34a;">✓ Создан</div>
+                        <div style="font-size: 12px; color: #64748b;" id="timeline-date-created">Сегодня</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; border-left: 1px dashed #cbd5e1;">
+                        <div id="step-verified-label" style="font-weight: 700; color: #0c56ea;">Проверен</div>
+                        <div style="font-size: 12px; color: #64748b;">Выполнено</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; border-left: 1px dashed #cbd5e1;">
+                        <div id="step-transit-label" style="font-weight: 700; color: #ea580c;">🚚 В пути</div>
+                        <div style="font-size: 12px; color: #ea580c;">Склад-Транзит</div>
+                    </div>
+                    <div style="text-align: center; flex: 1; border-left: 1px dashed #cbd5e1;">
+                        <div id="step-issued-label" style="font-weight: 700; color: #94a3b8;">📦 Выдан</div>
+                        <div style="font-size: 12px; color: #94a3b8;">Ожидание</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 15px; color: #0f172a;">Содержимое накладной заказа</h3>
+                <div class="table-responsive">
+                    <table class="schedule-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #e2e8f0; background: #f8fafc;">
+                                <th style="padding: 10px;">Артикул</th>
+                                <th style="padding: 10px;">Бренд / Название запчасти</th>
+                                <th style="padding: 10px; text-align: center;">Срок</th>
+                                <th style="padding: 10px; text-align: center;">Кол-во</th>
+                                <th style="padding: 10px; text-align: right;">Цена</th>
+                                <th style="padding: 10px; text-align: right;">Сумма</th>
+                                <th style="padding: 10px; text-align: center;">Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-items-body">
+                            <!-- Заполняется динамически скриптом -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let activeOpenedOrderId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверка роли
+            const userRole = localStorage.getItem('am_user_role');
+            if (userRole !== 'client') {
+                alert('🔒 Доступ заблокирован! Пожалуйста, сначала войдите в систему.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Баланс
+            const savedName = localStorage.getItem('am_user_name') || 'Иван Иванович';
+            const savedBalance = localStorage.getItem('am_user_balance') || '45200';
+            document.getElementById('nav-user-greeting').innerText = `Добрый день, ${savedName}!`;
+            document.getElementById('nav-user-balance').innerText = parseInt(savedBalance).toLocaleString('ru-RU') + ' ₽';
+
+            // Генерация дефолтной истории, если пусто
+            let globalOrders = JSON.parse(localStorage.getItem('am_user_orders_history') || '[]');
+            if (globalOrders.length === 0) {
+                globalOrders = [
+                    {
+                        id: "AM-789423",
+                        dateCreated: "30.09.2026",
+                        dateArrival: "06.10.2026 (Ожидается)",
+                        totalPrice: 9700,
+                        status: "В обработке",
+                        items: [
+                            { article: "5112-BREMBO", name: "Тормозные диски передние вентилируемые", brand: "Brembo", deadline: "1 день", quantity: 2, price: 4850 }
+                        ]
+                    },
+                    {
+                        id: "AM-785112",
+                        dateCreated: "15.09.2026",
+                        dateArrival: "16.09.2026 (Выдан)",
+                        totalPrice: 3200,
+                        status: "Выдан",
+                        items: [
+                            { article: "O-143", name: "Фильтр масляный ДВС оригинальный", brand: "Ford OEM", deadline: "1 день", quantity: 1, price: 3200 }
+                        ]
+                    }
+                ];
+                localStorage.setItem('am_user_orders_history', JSON.stringify(globalOrders));
+            }
+
+            // Перехват закупки из корзины
+            const urlParams = new URLSearchParams(window.location.search);
+            const isNewOrder = urlParams.get('newOrder');
+            const checkoutPayload = JSON.parse(localStorage.getItem('am_checkout_payload') || 'null');
+
+            if (isNewOrder === 'true' && checkoutPayload && checkoutPayload.length > 0) {
+                const newOrderTotal = checkoutPayload.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const currentCity = localStorage.getItem('am_selected_city') || 'Москва';
+                const currentDeliveryTime = currentCity === 'Москва' ? '1 день' : (currentCity === 'Пенза' ? '3 дня' : '2 дня');
+
+                const newInvoice = {
+                    id: "AM-" + Math.floor(100000 + Math.random() * 900000),
+                    dateCreated: new Date().toLocaleDateString('ru-RU'),
+                    dateArrival: `${currentDeliveryTime} (В пути)`,
+                    totalPrice: newOrderTotal,
+                    status: "В обработке",
+                    items: checkoutPayload
+                };
+
+                globalOrders.unshift(newInvoice);
+                localStorage.setItem('am_user_orders_history', JSON.stringify(globalOrders));
+                localStorage.removeItem('am_checkout_payload');
+                window.history.replaceState({}, document.title, "orders.html?action=view");
+            }
+
+            document.getElementById('cancel-entire-order-btn').onclick = cancelEntireOrder;
+            renderOrdersListTable();
+        });
+
+        function renderOrdersListTable() {
+            const tbody = document.getElementById('orders-list-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const orders = JSON.parse(localStorage.getItem('am_user_orders_history') || '[]');
+
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.style.borderBottom = "1px solid #e2e8f0";
+                row.style.cursor = "pointer";
+                row.className = "clickable-order-row";
+                row.onclick = function() { openOrderDetails(order.id); };
+
+                let badgeStyle = 'background:#ffedd5; color:#ea580c;';
+                if (order.status === 'Выдан') badgeStyle = 'background:#dcfce7; color:#15803d;';
+                if (order.status === 'Отменен') badgeStyle = 'background:#fee2e2; color:#ef4444;';
+
+                row.innerHTML = `
+                    <td style="padding: 15px;"><strong style="color: #ea580c;">№ ${order.id}</strong></td>
+                    <td style="padding: 15px; font-weight: 500;">${order.dateCreated}</td>
+                    <td style="padding: 15px; color:#475569; font-size:13px;">${order.dateArrival}</td>
+                    <td style="padding: 15px; font-weight: 700; text-align: right; color:#0f172a;">${order.totalPrice.toLocaleString('ru-RU')} ₽</td>
+                    <td style="padding: 15px; text-align: center;"><span style="padding:4px 10px; border-radius:12px; font-size:12px; font-weight:700; ${badgeStyle}">${order.status}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        function openOrderDetails(orderId) {
+            activeOpenedOrderId = orderId;
+            const orders = JSON.parse(localStorage.getItem('am_user_orders_history') || '[]');
+            const currentOrder = orders.find(o => o.id === orderId);
+            if (!currentOrder) return;
+
+            document.getElementById('detail-order-number').innerText = `Заказ № ${currentOrder.id}`;
+            document.getElementById('detail-order-date').innerText = `от ${currentOrder.dateCreated}`;
+            document.getElementById('timeline-date-created').innerText = currentOrder.dateCreated;
+
+            const badge = document.getElementById('detail-order-badge');
+            badge.innerText = currentOrder.status;
+            
+            const cancelBtn = document.getElementById('cancel-entire-order-btn');
+
+            if (currentOrder.status === 'Отменен') {
+                badge.style.background = '#fee2e2'; badge.style.color = '#ef4444';
+                cancelBtn.style.display = 'none';
+                updateTimelineStyles('canceled');
+            } else if (currentOrder.status === 'Выдан') {
+                badge.style.background = '#dcfce7'; badge.style.color = '#15803d';
+                cancelBtn.style.display = 'none';
+                updateTimelineStyles('issued');
+            } else {
+                badge.style.background = '#ffedd5'; badge.style.color = '#ea580c';
+                cancelBtn.style.display = 'block';
+                updateTimelineStyles('processing');
+            }
+
+            const tbodyDetail = document.getElementById('detail-items-body');
+            tbodyDetail.innerHTML = '';
+
+            currentOrder.items.forEach((item, itemIdx) => {
+                const isItemCanceled = currentOrder.status === 'Отменен' || item.quantity === 0;
+                const actionButton = isItemCanceled ? `<span style="color:#94a3b8; font-size:13px; font-style:italic;">Удалено</span>` : 
+                    `<span onclick="deleteItemFromInvoice(${itemIdx})" style="cursor:pointer; color:#ef4444; font-weight:bold; font-size:14px;">✕ Удалить</span>`;
+
+                const dRow = document.createElement('tr');
+                dRow.style.borderBottom = "1px solid #e2e8f0";
+                if (item.quantity === 0) dRow.style.opacity = '0.5';
+
+                dRow.innerHTML = `
+                    <td style="padding:12px;"><strong>${item.article}</strong></td>
+                    <td style="padding:12px; color:#334155;">${item.name} <span style="color:#ea580c; font-size:12px;">(${item.brand})</span></td>
+                    <td style="padding:12px; text-align:center;"><span style="font-size:12px; font-weight:600; color:#0369a1;">${item.deadline || '1 день'}</span></td>
+                    <td style="padding:12px; text-align:center; font-weight:700;">${item.quantity} шт.</td>
+                    <td style="padding:12px; text-align:right; font-weight:600; color:#475569;">${item.price.toLocaleString('ru-RU')} ₽</td>
+                    <td style="padding:12px; text-align:right; font-weight:700; color:#0f172a;">${(item.price * item.quantity).toLocaleString('ru-RU')} ₽</td>
+                    <td style="padding:12px; text-align:center;">${actionButton}</td>
+                `;
+                tbodyDetail.appendChild(dRow);
+            });
+
+            document.getElementById('orders-list-screen').style.display = 'none';
+            document.getElementById('order-details-screen').style.display = 'block';
+        }
+
+        function updateTimelineStyles(status) {
+            const step2 = document.getElementById('step-verified-label');
+            const step3 = document.getElementById('step-transit-label');
+            const step4 = document.getElementById('step-issued-label');
+            if (status === 'canceled') {
+                step2.innerText = "Отменено"; step2.style.color = "#ef4444";
+                step3.innerText = "---"; step3.style.color = "#94a3b8";
+                step4.innerText = "---"; step4.style.color = "#94a3b8";
+            } else {
+                step2.innerText = "Проверен"; step2.style.color = "#0c56ea";
+                step3.innerText = "🚚 В пути"; step3.style.color = "#ea580c";
+                step4.innerText = "📦 Выдан"; step4.style.color = status === 'issued' ? '#16a34a' : '#94a3b8';
+            }
+        }
+
+        function deleteItemFromInvoice(itemIdx) {
+            if (!confirm('Вы уверены, что хотите удалить эту позицию из накладной?')) return;
+
+            let orders = JSON.parse(localStorage.getItem('am_user_orders_history') || '[]');
+            const orderIdx = orders.findIndex(o => o.id === activeOpenedOrderId);
+            if (orderIdx === -1) return;
+
+            let currentBalance = parseInt(localStorage.getItem('am_user_balance') || '45200');
+            const refundedAmount = orders[orderIdx].items[itemIdx].price * orders[orderIdx].items[itemIdx].quantity;
+            
+            orders[orderIdx].totalPrice -= refundedAmount;
+            orders[orderIdx].items[itemIdx].quantity = 0;
+
+            const activeItems = orders[orderIdx].items.filter(item => item.quantity > 0);
+            if (activeItems.length === 0) {
+                orders[orderIdx].status = "Отменен";
+                orders[orderIdx].dateArrival = "Отменен контрагентом";
+                orders[orderIdx].totalPrice = 0;
+            }
+
+            localStorage.setItem('am_user_balance', (currentBalance + refundedAmount).toString());
+            localStorage.setItem('am_user_orders_history', JSON.stringify(orders));
+            document.getElementById('nav-user-balance').innerText = (currentBalance + refundedAmount).toLocaleString('ru-RU') + ' ₽';
+
+            alert(`Позиция аннулирована. Сумма ${refundedAmount.toLocaleString('ru-RU')} ₽ успешно возвращена на ваш баланс.`);
+            openOrderDetails(activeOpenedOrderId);
+        }
+
+        function cancelEntireOrder() {
+            if (!confirm('Вы уверены, что хотите полностью отменить этот заказ?')) return;
+
+            let orders = JSON.parse(localStorage.getItem('am_user_orders_history') || '[]');
+            const orderIdx = orders.findIndex(o => o.id === activeOpenedOrderId);
+            if (orderIdx === -1) return;
+
+            let refundTotal = 0;
+            orders[orderIdx].items.forEach(item => {
+                refundTotal += item.price * item.quantity;
+                item.quantity = 0;
+            });
+
+            orders[orderIdx].status = "Отменен";
+            orders[orderIdx].dateArrival = "Отменен контрагентом";
+            orders[orderIdx].totalPrice = 0;
+
+            let currentBalance = parseInt(localStorage.getItem('am_user_balance') || '45200');
+            localStorage.setItem('am_user_balance', (currentBalance + refundTotal).toString());
+            localStorage.setItem('am_user_orders_history', JSON.stringify(orders));
+
+            document.getElementById('nav-user-balance').innerText = (currentBalance + refundTotal).toLocaleString('ru-RU') + ' ₽';
+            alert(`Заказ № ${activeOpenedOrderId} отменен. Сумма ${refundTotal.toLocaleString('ru-RU')} ₽ возвращена.`);
+            openOrderDetails(activeOpenedOrderId);
+        }
+
+        function closeOrderDetails() {
+            document.getElementById('orders-list-screen').style.display = 'block';
+            document.getElementById('order-details-screen').style.display = 'none';
+            renderOrdersListTable();
+        }
+
+        const citySelect = document.getElementById('header-city-select');
+        if (citySelect) {
+            const savedCity = localStorage.getItem('am_selected_city');
+            if (savedCity) citySelect.value = savedCity;
+            citySelect.addEventListener('change', function() {
+                localStorage.setItem('am_selected_city', this.value);
+            });
+        }
+
+        function handleLogout(event) {
+            event.preventDefault();
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
